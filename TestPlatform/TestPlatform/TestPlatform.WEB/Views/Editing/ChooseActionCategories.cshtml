@@ -1,0 +1,43 @@
+﻿@model IEnumerable<Category>
+@{
+    ViewData["Title"] = "Редактирование теста";
+    int i = 0;
+}
+
+@if (TempData["message"] != null)
+{
+    <div class="alert alert-success">@TempData["message"]</div>
+}
+
+<table class="table table-bordered table-active">
+    <thead class="thead-dark text-center">
+        <tr>
+            <th class="align-middle" style="width:5%">#</th>
+            <th class="align-middle">Категория</th>
+            <th class="align-middle" style="width:20%">Количество тестов</th>
+            <th style="width:30%">Действия над категорией</th>
+        </tr>
+    </thead>
+    @foreach (var category in Model)
+    {
+        <tbody class="text-center">
+            <tr>
+                <th class="align-middle">@(++i)</th>
+                <td class="align-middle">@category.Name</td>
+                <td class="align-middle">@category.Test.Count</td>
+                <td class="align-middle">
+                    <form asp-action="DeleteCategory" method="post">
+                        <p><a asp-action="ChooseActionTests" class="btn btn-sm btn-warning" asp-route-id="@category.Id" style="width:60%">Перейти к перечню тестов</a></p>
+                        <p><a asp-action="EditCategory" class="btn btn-sm btn-danger" asp-route-id="@category.Id" style="width:60%">Редактировать название категории</a></p>
+                        <button type="submit" onclick="confirm('Будут удалены все темы в данной категории. Вы действительно хотите удалить категорию?') ? this.form.submit() : ''; return false" class="btn btn-dark btn-sm" style="width:60%">Удалить категорию</button>
+                        <input type="hidden" value="@category.Id" name="categoryId" />
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    }
+</table>
+<div class="text-center">
+    <a asp-controller="Creating" asp-action="CreateCategory" class="btn btn-primary" style="width:25%">Добавить новую категорию</a>
+    <a asp-controller="Home" asp-action="Index" class="btn btn-secondary" style="width:25%">Выйти в меню</a>
+</div>

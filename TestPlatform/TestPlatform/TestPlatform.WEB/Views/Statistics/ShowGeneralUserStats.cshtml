@@ -1,0 +1,34 @@
+﻿@model IEnumerable<Result>
+@{
+    ViewData["Title"] = "Статистика";
+    int i = 0;
+}
+
+<table class="table table-bordered table-active">
+    <thead class="thead-dark text-center">
+        <tr>
+            <th class="align-middle" style="width:3%">#</th>
+            <th class="align-middle">Имя пользователя</th>
+            <th class="align-middle" style="width:12%">Количество пройденных тестов</th>
+            <th class="align-middle" style="width:17%">Количество положительных результатов</th>
+            <th class="align-middle" style="width:17%">Количество отрицательных результатов</th>
+            <th class="align-middle" style="width:10%">Средний результат, %</th>
+            <th class="align-middle">Подробнее</th>
+        </tr>
+    </thead>
+    @foreach (var result in Model.GroupBy(p => p.UserName))
+    {
+        <tbody class="text-center">
+            <tr>
+                <th class="align-middle">@(++i)</th>
+                <td class="align-middle">@result.Key</td>
+                <td class="align-middle">@result.Count()</td>
+                <td class="align-middle">@result.Where(p => p.IsSuccess).Count()</td>
+                <td class="align-middle">@result.Where(p => !p.IsSuccess).Count()</td>
+                <td class="align-middle">@Math.Round((result.Sum(p => p.Point) / result.Count()), 1)</td>
+                <td class="align-middle"><a asp-action="ShowUserStatsByCategories" class="btn btn-primary" asp-route-userName="@result.Key">Подробнее</a></td>
+            </tr>
+        </tbody>
+    }
+</table>
+<a asp-action="ShowStatsByCategories" class="btn btn-secondary" style="width:25%">Назад</a>

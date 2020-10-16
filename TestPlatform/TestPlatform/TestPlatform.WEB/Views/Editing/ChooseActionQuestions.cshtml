@@ -1,0 +1,56 @@
+﻿@model Test
+@{
+    ViewData["Title"] = "Редактирование теста";
+}
+
+<h6 class="list-group-item list-group-item-action bg-warning text-dark">Категория: @Model.Category.Name</h6>
+<h6 class="list-group-item list-group-item-action list-group-item-secondary">Тест: @Model.Name</h6>
+<br />
+
+@if(TempData["message"] != null)
+{
+    <div class="alert alert-success">@TempData["message"]</div>
+}
+
+<table class="table table-bordered text-center table-warning">
+    <thead class="thead-dark">
+    <tr>
+        <th class="align-middle" style="width:3%">#</th>
+        <th class="align-middle" style="width:10%">Тип вопроса</th>
+        <th class="align-middle">Вопрос</th>
+        <th class="align-middle" style="width:15%">Количество возможных вариантов ответа</th>
+        <th class="align-middle" style="width:23%">Действия над вопросом</th>
+    </tr>
+    </thead>
+    <tbody>
+    @for (int i = 0; i < Model.Question.Count; i++)
+    {
+        <tr>
+            <th class="align-middle">@(i+1)</th>
+            <td class="align-middle">@(Model.Question[i].IsOpenType ? "Открытый" : "Закрытый")</td>
+            <td class="align-middle">@Model.Question[i].Name</td>
+            <td class="align-middle">@Model.Question[i].Answer.Count</td>
+            <td>
+                <form method="post" asp-action="DeleteQuestion">
+                    <p><a asp-action="ChooseActionAnswers" asp-route-id="@Model.Question[i].Id" class="btn btn-sm btn-warning" style="width:75%">Перейти к перечню ответов</a></p>
+                    <p><a asp-action="EditQuestion" asp-route-id="@Model.Question[i].Id" class="btn btn-sm btn-danger" style="width:75%">Редактировать название вопроса</a></p>
+                    <button type="submit" onclick="confirm('Вы действительно хотите удалить вопрос?') ? this.form.submit() : ''; return false" class="btn btn-dark btn-sm" style="width:75%">Удалить вопрос</button>
+                    <input type="hidden" asp-for="Question[i].Id" name="questionId" />
+                    <input type="hidden" asp-for="Id" name="testId" />
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<form asp-action="BuildQuestion">
+    <div class="text-center">
+        <button class="btn btn-success" style="width:25%">Добавить вопрос</button>
+        <a asp-action="ChooseActionTests" asp-route-id="@Model.CategoryId" class="btn btn-secondary" style="width:25%">Назад</a>
+    </div>
+    <input type="hidden" asp-for="Category.Name" name="testModel.Test.Category.Name" />
+    <input type="hidden" asp-for="Name" name="testModel.Test.Name" />
+    <input type="hidden" asp-for="Rate" name="testModel.Test.Rate" />
+    <input type="hidden" asp-for="Id" name="testModel.Test.Id" />
+</form>

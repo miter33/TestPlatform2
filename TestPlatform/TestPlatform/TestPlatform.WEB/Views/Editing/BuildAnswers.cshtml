@@ -1,0 +1,72 @@
+﻿@model TestParamViewModel
+@{
+    ViewData["Title"] = "Создание теста";
+}
+
+<h6 class="list-group-item list-group-item-action bg-warning text-dark">Категория: @Model.Test.Category.Name</h6>
+<h6 class="list-group-item list-group-item-action list-group-item-secondary">Тест: @Model.Test.Name</h6>
+<br />
+
+<form method="post" asp-action="CreateQuestion">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <table class="table table-bordered text-center table-success">
+        <thead class="thead-dark">
+            <tr>
+                <th class="align-middle" style="width:10%">Тип вопроса</th>
+                <th class="align-middle">Вопрос</th>
+                <th class="align-middle" style="width:30%">Введите возможные варианты ответов</th>
+                @if (Model.CountAnswerViewModel[0].CountAnswers > 1)
+                {
+                    <th class="align-middle" style="width:10%">Укажите правильный ответ</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="align-middle">@(Model.CountAnswerViewModel[0].CountAnswers == 1 ? "Открытый" : "Закрытый")</td>
+                <td class="align-middle">
+                    <div class="form-group">
+                        <p>@Model.Test.Question[0].Name</p>
+                        <input type="hidden" asp-for="Test.Question[0].Name" name="testModel.Test.Question[0].Name" />
+                        <input type="hidden" asp-for="CountAnswerViewModel[0].CountAnswers" name="testModel.CountAnswerViewModel[0].CountAnswers" />
+                    </div>
+                </td>
+                <td>
+                    @for (int j = 0; j < Model.CountAnswerViewModel[0].CountAnswers; j++)
+                    {
+                        <div class="form-group">
+                            <input class="form-control" asp-for="Test.Question[0].Answer[j].Name" name="testModel.Test.Question[0].Answer[@j].Name" placeholder="@(j+1).">
+                            <span asp-validation-for="Test.Question[0].Answer[j].Name" class="text-danger"></span>
+                        </div>
+                    }
+                </td>
+                @if (Model.CountAnswerViewModel[0].CountAnswers > 1)
+                {
+                    <td>
+                        @for (int j = 0; j < Model.CountAnswerViewModel[0].CountAnswers; j++)
+                        {
+                            <div class="form-group">
+                                <input type="checkbox" value="true" class="form-control" asp-for="Test.Question[0].Answer[j].IsCorrect" name="testModel.Test.Question[0].Answer[@j].IsCorrect">
+                            </div>
+                        }
+                    </td>
+                }
+                else
+                {
+                    <input type="hidden" value="true" checked="checked" class="form-control" asp-for="Test.Question[0].Answer[0].IsCorrect" name="testModel.Test.Question[0].Answer[0].IsCorrect">
+                }
+
+            </tr>
+        </tbody>
+    </table>
+    <div class="text-center">
+        <button type="submit" class="btn btn-success" style="width:25%">Создать</button>
+        <button asp-action="BuildQuestion" class="btn btn-secondary" style="width:25%" formnovalidate>Назад</button>
+    </div>
+    <input type="hidden" asp-for="CountQuestions" name="testModel.CountQuestions" />
+    <input type="hidden" asp-for="Test.Rate" name="testModel.Test.Rate" />
+    <input type="hidden" asp-for="Test.Category.Name" name="testModel.Test.Category.Name" />
+    <input type="hidden" asp-for="Test.Name" name="testModel.Test.Name" />
+    <input type="hidden" asp-for="Test.Id" name="testModel.Test.Id" />
+    <input type="hidden" asp-for="Test.Id" name="testModel.Test.Question[0].TestId" />
+</form>

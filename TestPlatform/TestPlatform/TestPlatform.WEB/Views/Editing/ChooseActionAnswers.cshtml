@@ -1,0 +1,64 @@
+﻿@model Question
+@{
+    ViewData["Title"] = "Редактирование теста";
+}
+
+<h6 class="list-group-item list-group-item-action bg-warning text-dark">Категория: @Model.Test.Category.Name</h6>
+<h6 class="list-group-item list-group-item-action list-group-item-secondary">Тест: @Model.Test.Name</h6>
+<h6 class="list-group-item list-group-item-action list-group-item-danger">Тип вопроса: @(Model.IsOpenType ? "Открытый": "Закрытый")</h6>
+<h2 class="list-group-item list-group-item-action list-group-item-info">Вопрос: @Model.Name</h2>
+<br />
+
+<form asp-action="UpdateAnswers">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <table class="table table-bordered text-center table-active">
+        <thead class="thead-dark">
+            <tr>
+                <th class="align-middle" style="width:3%">#</th>
+                <th class="align-middle">Ответ</th>
+                @if (!Model.IsOpenType)
+                {
+                    <th class="align-middle" style="width:10%">Правильный вариант ответа</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Answer.Count; i++)
+            {
+                <tr>
+                    <th class="align-middle">@(i+1)</th>
+                    <td>
+                        <div class="form-group">
+                            <input class="form-control" asp-for="Answer[i].Name">
+                            <span asp-validation-for="Answer[i].Name" class="text-danger"></span>
+                            <input type="hidden" asp-for="Answer[i].Id">
+                            <input type="hidden" asp-for="Answer[i].QuestionId">
+                        </div>
+                    </td>
+                    @if (!Model.IsOpenType)
+                    {
+                        <td>
+                            <div class="form-group">
+                                <input type="checkbox" class="form-control" asp-for="Answer[i].IsCorrect">
+                            </div>
+                        </td>
+                    }
+                    else
+                    {
+                        <input type="hidden" asp-for="Answer[i].IsCorrect" />
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="text-center">
+        <button type="submit" class="btn btn-success" style="width:25%">Сохранить изменения</button>
+        <a asp-action="ChooseActionQuestions" asp-route-id="@Model.TestId" class="btn btn-secondary" style="width:25%">Назад</a>
+    </div>
+    <input type="hidden" asp-for="Name" />
+    <input type="hidden" asp-for="IsOpenType" />
+    <input type="hidden" asp-for="Test.Category.Name" />
+    <input type="hidden" asp-for="Test.Name" />
+    <input type="hidden" asp-for="Test.Rate" />
+    <input type="hidden" asp-for="TestId" />
+</form>

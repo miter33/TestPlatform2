@@ -1,0 +1,43 @@
+﻿@model Category
+@{
+    ViewData["Title"] = "Проверка знаний";
+    int i = 0;
+}
+
+<h6 class="list-group-item list-group-item-action bg-warning text-dark">Категория: @Model.Name</h6>
+<br />
+
+<form asp-action="CreateUserName">
+    <table class="table table-bordered table-success">
+        <thead class="thead-dark text-center">
+            <tr>
+                <th class="align-middle" style="width:5%">#</th>
+                <th class="align-middle">Название теста</th>
+                <th class="align-middle" style="width:20%">Требуемый процент успешности, %</th>
+                <th class="align-middle" style="width:20%">Время на тест, мин</th>
+                <th class="align-middle" style="width:15%">Количество вопросов</th>
+                <th class="align-middle" style="width:20%">Выбор</th>
+            </tr>
+        </thead>
+        @foreach (var test in Model.Test)
+        {
+            <tbody class="text-center">
+                <tr>
+                    <th class="align-middle">@(++i)</th>
+                    <td class="align-middle">@test.Name</td>
+                    <td class="align-middle">@test.Rate</td>
+                    <td class="align-middle">@(test.Timer == null ? "-" : $"{test.Timer}")</td>
+                    <td class="align-middle">@test.Question.Count</td>
+                    <td class="align-middle">
+                        <button value="@test.Id" name="result.TestId" class="btn btn-primary" style="width:80%">Решать тест</button>
+                        <input type="hidden" value="@test.Name" name="result.Test.Name" />
+                        <input type="hidden" value="@test.Rate" name="result.Test.Rate" />
+                    </td>
+                </tr>
+            </tbody>
+        }
+    </table>
+    <a asp-action="ChooseCategory" class="btn btn-secondary" style="width:25%">Назад</a>
+    <input type="hidden" value="@Model.Name" name="result.Test.Category.Name" />
+    <input type="hidden" value="@Model.Id" name="result.Test.CategoryId" />
+</form>

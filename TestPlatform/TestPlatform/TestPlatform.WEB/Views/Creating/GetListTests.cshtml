@@ -1,0 +1,45 @@
+﻿@model Category
+@{
+    ViewData["Title"] = "Создание теста";
+    int i = 0;
+}
+
+<h6 class="list-group-item list-group-item-action bg-warning text-dark">Категория: @Model.Name</h6>
+<br />
+
+@if (TempData["message"] != null)
+{
+    <div class="alert alert-success">@TempData["message"]</div>
+}
+
+<form asp-action="CreateParamTest">
+    <table class="table table-bordered table-warning">
+        <thead class="thead-dark">
+            <tr class="table-primary text-center">
+                <th>#</th>
+                <th>Название теста</th>
+                <th>Количество вопросов</th>
+                <th>Требуемый процент успешности, %</th>
+                <th>Время на тест, мин</th>
+            </tr>
+        </thead>
+        @foreach (var test in Model.Test)
+        {
+            <tbody>
+                <tr class="text-center">
+                    <th class="align-middle">@(++i)</th>
+                    <td class="align-middle">@test.Name</td>
+                    <td class="align-middle">@test.Question.Count</td>
+                    <td class="align-middle">@test.Rate</td>
+                    <td class="align-middle">@(test.Timer == null ? "-" : $"{test.Timer}")</td>
+                </tr>
+            </tbody>
+        }
+    </table>
+    <div class="text-center">
+        <button class="btn btn-primary" style="width:25%">Создать новый тест</button>
+        <a asp-action="GetListCategories" class="btn btn-secondary" style="width:25%">Перейти к списку категорий</a>
+    </div>
+    <input type="hidden" value="@Model.Name" name="testModel.Test.Category.Name" />
+    <input type="hidden" value="@Model.Id" name="testModel.Test.CategoryId" />
+</form>

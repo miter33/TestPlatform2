@@ -1,0 +1,56 @@
+﻿@model Category
+@{
+    ViewData["Title"] = "Редактирование теста";
+    int i = 0;
+}
+
+<h6 class="list-group-item list-group-item-action bg-warning text-dark">Категория: @Model.Name</h6>
+<br />
+
+@if (TempData["message"] != null)
+{
+    <div class="alert alert-success">@TempData["message"]</div>
+}
+
+<table class="table table-bordered table-info">
+    <thead class="thead-dark text-center">
+        <tr>
+            <th class="align-middle" style="width:5%">#</th>
+            <th class="align-middle">Название теста</th>
+            <th class="align-middle" style="width:15%">Требуемый процент успешности, %</th>
+            <th class="align-middle" style="width:12%">Время на тест, мин</th>
+            <th class="align-middle" style="width:15%">Количество вопросов</th>
+            <th class="align-middle" style="width:30%">Действия над тестом</th>
+        </tr>
+    </thead>
+    @foreach (var test in Model.Test)
+    {
+        <tbody class="text-center">
+            <tr>
+                <th class="align-middle">@(++i)</th>
+                <td class="align-middle">@test.Name</td>
+                <td class="align-middle">@test.Rate</td>
+                <td class="align-middle">@(test.Timer == null ? "-" : $"{test.Timer}")</td>
+                <td class="align-middle">@test.Question.Count</td>
+                <td class="align-middle">
+                    <form asp-action="DeleteTest" method="post">
+                        <p><a asp-action="ChooseActionQuestions" asp-route-id="@test.Id" class="btn btn-sm btn-warning" style="width:55%">Перейти к перечню вопросов</a></p>
+                        <p><a asp-action="EditTest" asp-route-id="@test.Id" class="btn btn-sm btn-danger" style="width:55%">Редактировать тест</a></p>
+                        <button type="submit" onclick="confirm('Вы действительно хотите удалить тему?') ? this.form.submit() : ''; return false" class="btn btn-dark btn-sm" style="width:55%">Удалить тест</button>
+                        <input type="hidden" asp-for="@test.Id" name="testId" />
+                        <input type="hidden" asp-for="Id" name="categoryId" />
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    }
+</table>
+
+<form asp-controller="Creating" asp-action="CreateParamTest">
+    <div class="text-center">
+        <button class="btn btn-primary" style="width:25%">Добавить новый тест</button>
+        <a asp-action="ChooseActionCategories" class="btn btn-secondary" style="width:25%">Назад</a>
+        <input type="hidden" value="@Model.Id" name="testModel.Test.CategoryId" />
+        <input type="hidden" value="@Model.Name" name="testModel.Test.Category.Name" />
+    </div>
+</form>

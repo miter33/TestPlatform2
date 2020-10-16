@@ -1,0 +1,32 @@
+﻿@model Category
+@{
+    ViewData["Title"] = "Статистика";
+    int i = 0;
+}
+
+<h6 class="list-group-item list-group-item-action bg-warning text-dark">Категория: @Model.Name</h6>
+<br />
+<table class="table table-bordered table-secondary">
+    <thead class="thead-dark text-center">
+        <tr>
+            <th class="align-middle" style="width:3%">#</th>
+            <th class="align-middle">Название теста</th>
+            <th class="align-middle" style="width:23%">Требуемый процент успешности теста, %</th>
+            <th class="align-middle" style="width:24%">Средний результат проходимости теста, %</th>
+            <th class="align-middle" style="width:18%">Количество пройденных тестов</th>
+        </tr>
+    </thead>
+    @foreach (var test in Model.Test.Where(p => p.Result.Count != 0))
+    {
+        <tbody class="text-center">
+            <tr>
+                <th class="align-middle">@(++i)</th>
+                <td class="align-middle">@test.Name</td>
+                <td class="align-middle">@test.Rate</td>
+                <td class="align-middle">@Math.Round((test.Result.Sum(p => p.Point) / test.Result.Count()), 1)</td>
+                <td class="align-middle">@test.Result.Count</td>
+            </tr>
+        </tbody>
+    }
+</table>
+<a asp-action="ShowStatsByCategories" class="btn btn-secondary" style="width:25%">Назад</a>

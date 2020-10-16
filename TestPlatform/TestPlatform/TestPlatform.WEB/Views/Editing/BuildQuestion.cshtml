@@ -1,0 +1,53 @@
+﻿@model TestParamViewModel
+@{
+    ViewData["Title"] = "Создание теста";
+}
+
+<h6 class="list-group-item list-group-item-action bg-warning text-dark">Категория: @Model.Test.Category.Name</h6>
+<h6 class="list-group-item list-group-item-action list-group-item-secondary">Тест: @Model.Test.Name</h6>
+<br />
+
+<form asp-action="BuildAnswers">
+    <table class="table table-bordered text-center table-success">
+        <thead class="thead-dark">
+        <tr>
+            <th class="align-middle">Введите вопрос&#10054;</th>
+            <th class="align-middle" style="width:20%">Введите количество возможных вариантов ответов</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>
+                <div class="form-group">
+                    <input class="form-control" asp-for="Test.Question[0].Name">
+                    <span asp-validation-for="Test.Question[0].Name" class="text-danger"></span>
+                </div>
+            </td>
+            <td>
+                <div class="form-group">
+                    <input class="form-control" asp-for="CountAnswerViewModel[0].CountAnswers" OnKeyPress="NumericText()">
+                    <span asp-validation-for="CountAnswerViewModel[0].CountAnswers" class="text-danger"></span>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <h6 class="list-group-item list-group-item-action list-group-item-info">&#10054 - при желании создать вопрос открытого типа в поле для количества возможных вариантов ответов введите - 1</h6>
+    <div class="text-center">
+        <button type="submit" class="btn btn-success" style="width:25%">Перейти к созданию ответов</button>
+        <a asp-action="ChooseActionQuestions" asp-route-id="@Model.Test.Id" class="btn btn-secondary" style="width:25%">Назад</a>
+    </div>
+    <input type="hidden" asp-for="CountQuestions" />
+    <input type="hidden" asp-for="Test.Rate" />
+    <input type="hidden" asp-for="Test.Category.Name" />
+    <input type="hidden" asp-for="Test.Name" />
+    <input type="hidden" asp-for="Test.Id" />
+</form>
+
+<script language="Javascript">
+    function NumericText() {
+        var key = window.event.keyCode;
+        if (key < 48 || key > 57)
+            window.event.returnValue = false;
+    }
+</script>

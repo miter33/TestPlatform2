@@ -1,0 +1,25 @@
+﻿@model Result
+@{
+    ViewData["Title"] = "Проверка знаний";
+}
+
+<h6 class="list-group-item list-group-item-action bg-warning text-dark">Категория: @Model.Test.Category.Name</h6>
+<h6 class="list-group-item list-group-item-action list-group-item-secondary">Тест: @Model.Test.Name</h6>
+<br />
+
+<form asp-action="Solve">
+    <div class="form-group">
+        <label>Введите Ваше имя</label>
+        <input class="form-control" asp-for="UserName" />
+        <span asp-validation-for="UserName" class="text-danger"></span>
+    </div>
+    <div class="text-center">
+        <button class="btn btn-success" style="width:25%">Решать тест</button>
+        <a asp-action="ChooseTest" asp-route-id="@Model.Test.CategoryId" style="width:25%" class="btn btn-secondary">Назад</a>
+    </div>
+    <input type="hidden" asp-for="TestId" />
+    <input type="hidden" asp-for="Test.Name" />
+    <input type="hidden" asp-for="Test.Category.Name" />
+    <input type="hidden" asp-for="Test.Rate" />
+    <input type="hidden" asp-for="Test.CategoryId" />
+</form>

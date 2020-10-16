@@ -1,0 +1,44 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" asp-fallback-src-include="/lib/jquery/dist/jquery.min.js" asp-fallback-test="window.jQuery"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" asp-fallback-href-include="lib/bootstrap/dist/css/bootstrap.min.css" asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+    <link rel="stylesheet" asp-href-include="css/fontStyle.css" />
+    <title>Главная страница</title>
+</head>
+<body style="background:LightYellow">
+    <h4 class="bg-primary text-center p-3 mb-3 text-white">Главная страница</h4>
+    <div class="row m-1 p-1">
+        <div class="col-5">
+            <a asp-controller="Creating" asp-action="GetListCategories" class="btn btn-secondary mb-1" style="width:100%;">Создание теста</a><br />
+            <a asp-controller="Testing" asp-action="ChooseCategory" class="btn btn-secondary mb-1" style="width:100%">Проверка знаний</a><br />
+            <a asp-controller="Editing" asp-action="ChooseActionCategories" class="btn btn-secondary mb-1" style="width:100%">Редактирование теста</a><br />
+            <a asp-controller="Statistics" asp-action="ShowStatsByCategories" class="btn btn-secondary" style="width:100%">Статистика</a>
+            <div class="card bg-white d-inline-block" style="max-width: 40rem; margin-top: 5%">
+                <div class="card-header bg-warning"><h4>Возможности программы:</h4></div>
+                <div class="card-body">
+                    <p class="card-text font-serif">• Возможность создавать необходимую категорию, а также необходимое количество тестов (т.е. определённая категория может включать в себя множество тестов)</p>
+                    <p class="card-text font-serif">• Возможность проходить проверку знаний</p>
+                    <p class="card-text font-serif">• Возможность создания теста на время</p>
+                    <p class="card-text font-serif">• Возможность создавать для каждого теста требуемый процент успешности</p>
+                    <div class="card-text font-serif">• Возможность создавать разные типы вопросов (открытый/закрытый):</div>
+                    <div class="card-text font-serif"><em>- открытый тип вопроса может содержать только 1 вариант ответа, который будет являться верным по умолчанию;</em></div>
+                    <p class="card-text font-serif"><em>- закрытый тип вопроса может содержать не более 6 возможных вариантов ответов и должен содержать только 1 правильный ответ</em></p>
+                    <p class="card-text font-serif">• Возможность просматривать правильные ответы по завершении теста с выставлением общей оценки по итогу</p>
+                    <p class="card-text font-serif">• Возможность просмотра статистики по категориям и тестам</p>
+                    <p class="card-text font-serif">• Возможность просмотра статистики пользователей</p>
+                    <p class="card-text font-serif">• Возможность редактирования и удаления тестов</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-7">
+            <img src="/image/test.jpeg" style="width:100%; height:100%" />
+        </div>
+    </div>
+</body>
+</html>

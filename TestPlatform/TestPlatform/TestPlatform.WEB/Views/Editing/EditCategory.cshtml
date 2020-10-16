@@ -1,0 +1,30 @@
+﻿@model Category
+@{
+    ViewData["Title"] = "Редактирование теста";
+}
+
+<form method="post" asp-action="UpdateCategory">
+    <table class="table table-bordered text-center table-active">
+        <thead class="thead-dark">
+            <tr>
+                <th class="align-middle">Название категории</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="form-group">
+                        <input class="form-control" asp-for="Name">
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="text-center">
+        <button type="submit" class="btn btn-success" style="width:25%">Сохранить изменения</button>
+        <a asp-action="ChooseActionCategories" class="btn btn-secondary" style="width:25%">Назад</a>
+    </div>
+    <input type="hidden" asp-for="Name" />
+    <input type="hidden" asp-for="Id" />
+</form>

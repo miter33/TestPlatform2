@@ -1,0 +1,71 @@
+﻿@model ResultParamViewModel
+@{
+    ViewData["Title"] = "Проверка знаний";
+}
+
+<h6 class="list-group-item list-group-item-action bg-warning text-dark">Категория: @Model.Test.Category.Name</h6>
+<h6 class="list-group-item list-group-item-action list-group-item-secondary">Тест: @Model.Test.Name</h6>
+<h6 class="list-group-item list-group-item-action list-group-item-primary">Требуемый процент успешности: @Model.Test.Rate %</h6>
+<h6 class="list-group-item list-group-item-action list-group-item-success">Пользователь: @Model.Result.UserName</h6>
+<br />
+<table class="table table-bordered">
+    <thead class="thead-dark">
+        <tr>
+            <th class="align-middle">#</th>
+            <th class="align-middle">Вопрос</th>
+            <th class="align-middle">Правильный ответ</th>
+            <th class="align-middle">Ваш ответ</th>
+            <th class="align-middle">Результат</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.Test.Question.Count; i++)
+        {
+            <tr>
+                @if (Model.UserAnswer[i] == null)
+                {
+                    <th class="align-middle bg-danger">@(i+1)</th>
+                    <td class="align-middle bg-danger">@Model.Test.Question[i].Name</td>
+                    <td class="align-middle bg-danger">@Model.Test.Question[i].Answer.FirstOrDefault(p => p.IsCorrect).Name</td>
+                    <td class="align-middle bg-danger">Отсутствует</td>
+                    <td class="align-middle bg-danger">Не верно</td>
+                }
+                else if (Model.UserAnswer[i].ToLower() == Model.Test.Question[i].Answer.FirstOrDefault(p => p.IsCorrect).Name.ToLower())
+                {
+                    <th class="align-middle bg-success">@(i+1)</th>
+                    <td class="align-middle bg-success">@Model.Test.Question[i].Name</td>
+                    <td class="align-middle bg-success">@Model.Test.Question[i].Answer.FirstOrDefault(p => p.IsCorrect).Name</td>
+                    <td class="align-middle bg-success">@Model.UserAnswer[i]</td>
+                    <td class="align-middle bg-success">Верно</td>
+                }
+                else
+                {
+                    <th class="align-middle bg-danger">@(i+1)</th>
+                    <td class="align-middle bg-danger">@Model.Test.Question[i].Name</td>
+                    <td class="align-middle bg-danger">@Model.Test.Question[i].Answer.FirstOrDefault(p => p.IsCorrect).Name</td>
+                    <td class="align-middle bg-danger">@Model.UserAnswer[i]</td>
+                    <td class="align-middle bg-danger">Не верно</td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+@if (Model.Result.IsSuccess)
+{
+    <div class="text-center list-group-item list-group-item-action list-group-item-success">
+        <h1>Ваш результат @Model.Result.Point %</h1>
+        <h1>Тест пройден</h1>
+    </div>
+}
+else
+{
+    <div class="text-center list-group-item list-group-item-action list-group-item-danger">
+        <h1>Ваш результат @Model.Result.Point %</h1>
+        <h1>Тест не пройден</h1>
+    </div>
+}
+<br />
+<div class="text-center">
+    <a asp-action="ChooseCategory" class="btn btn-primary" style="width:25%">Выбрать другой тест</a>
+    <a asp-controller="Home" asp-action="Index" class="btn btn-secondary" style="width:25%">Выйти в меню</a>
+</div>

@@ -1,0 +1,45 @@
+﻿@model TestParamViewModel
+@{
+    ViewData["Title"] = "Создание теста";
+}
+
+<h6 class="list-group-item list-group-item-action bg-warning text-dark">Категория: @Model.Test.Category.Name</h6>
+<br />
+
+<form asp-action="BuildQuestions">
+    <div class="form-group">
+        <label>Введите название теста</label>
+        <input class="form-control" asp-for="Test.Name">
+        <span asp-validation-for="Test.Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>Введите общее количество вопросов</label>
+        <input class="form-control" asp-for="CountQuestions" OnKeyPress="NumericText()">
+        <span asp-validation-for="CountQuestions" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>Введите требуемый процент успешности при прохождении теста</label>
+        <input class="form-control" asp-for="Test.Rate" OnKeyPress="NumericText()">
+        <span asp-validation-for="Test.Rate" class="text-danger"></span>
+    </div>
+    <div class="custom-control custom-checkbox text-center">
+        <input type="checkbox" class="custom-control-input" id="customCheck1" asp-for="IsTimer">
+        <label class="custom-control-label" for="customCheck1">Желаете создать тест на время?</label>
+    </div>
+    <br />
+    <div class="text-center">
+        <button class="btn btn-success" style="width:25%">Перейти к заполнению теста</button>
+        <a asp-action="GetListTests" asp-route-id="@Model.Test.CategoryId" style="width:25%" class="btn btn-secondary">Перейти к списку тестов</a>
+    </div>
+    <input type="hidden" asp-for="Test.CategoryId" />
+    <input type="hidden" asp-for="Test.Category.Name" />
+</form>
+
+<script language="Javascript">
+    function NumericText() {
+        var key = window.event.keyCode;
+        if (key < 48 || key > 57)
+            window.event.returnValue = false;
+    }
+</script>
+

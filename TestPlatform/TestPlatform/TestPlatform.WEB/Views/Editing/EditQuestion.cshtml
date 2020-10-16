@@ -1,0 +1,39 @@
+﻿@model Question
+@{
+    ViewData["Title"] = "Редактирование теста";
+}
+
+<h6 class="list-group-item list-group-item-action bg-warning text-dark">Категория: @Model.Test.Category.Name</h6>
+<h6 class="list-group-item list-group-item-action list-group-item-secondary">Тест: @Model.Test.Name</h6>
+<h6 class="list-group-item list-group-item-action list-group-item-danger">Тип вопроса: @(Model.IsOpenType ? "Открытый" : "Закрытый")</h6>
+<br />
+
+<form method="post" asp-action="UpdateQuestion">
+    <table class="table table-bordered text-center table-success">
+        <thead class="thead-dark">
+            <tr>
+                <th class="align-middle">Вопрос</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            <input class="form-control" asp-for="Name">
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </td>
+                </tr>
+        </tbody>
+    </table>
+    <div class="text-center">
+        <button type="submit" class="btn btn-success" style="width:25%">Сохранить изменения</button>
+        <a asp-action="ChooseActionQuestions" asp-route-id="@Model.TestId" class="btn btn-secondary" style="width:25%">Назад</a>
+    </div>
+    <input type="hidden" asp-for="Test.Category.Name" />
+    <input type="hidden" asp-for="Test.Name" />
+    <input type="hidden" asp-for="Test.Rate" />
+    <input type="hidden" asp-for="TestId" />
+    <input type="hidden" asp-for="IsOpenType" />
+    <input type="hidden" asp-for="Id" />
+</form>

@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" asp-fallback-href-include="lib/bootstrap/dist/css/bootstrap.min.css" asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" asp-fallback-src-include="/lib/jquery/dist/jquery.min.js" asp-fallback-test="window.jQuery"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js" asp-fallback-src-include="/lib/jquery-validation/dist/jquery.validate.min.js" asp-fallback-test="window.jQuery && window.jQuery.validator"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js" asp-fallback-src-include="/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js" asp-fallback-test="window.jQuery && window.jQuery.validator && window.jQuery.validator.unobtrusive"></script>
+    <link rel="stylesheet" asp-href-include="css/timerStyle.css" />
+    <title>@ViewData["Title"]</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-sm bg-primary navbar-dark justify-content-end">
+        <h4 class="bg-primary text-center p-2 text-white">@ViewData["Title"]</h4>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-dark ml-auto mr-1">Главная</a>
+        <a asp-controller="Creating" asp-action="GetListCategories" class="btn btn-dark mr-1">Создание теста</a>
+        <a asp-controller="Testing" asp-action="ChooseCategory" class="btn btn-dark mr-1">Проверка знаний</a>
+        <a asp-controller="Editing" asp-action="ChooseActionCategories" class="btn btn-dark mr-1">Редактирование теста</a>
+        <a asp-controller="Statistics" asp-action="ShowStatsByCategories" class="btn btn-dark mr-1">Статистика</a>
+    </nav><br />
+    <div>
+        @RenderBody()
+    </div>
+</body>
+</html>

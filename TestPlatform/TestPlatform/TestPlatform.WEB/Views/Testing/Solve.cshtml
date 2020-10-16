@@ -1,0 +1,66 @@
+﻿@model Result
+@{
+    ViewData["Title"] = "Проверка знаний";
+    int i = 0;
+}
+
+<h6 class="list-group-item list-group-item-action bg-warning text-dark">Категория: @Model.Test.Category.Name</h6>
+<h6 class="list-group-item list-group-item-action list-group-item-secondary">Тест: @Model.Test.Name</h6>
+<h6 class="list-group-item list-group-item-action list-group-item-primary">Требуемый процент успешности: @Model.Test.Rate %</h6>
+<h6 class="list-group-item list-group-item-action list-group-item-success">Пользователь: @Model.UserName</h6>
+
+@if (Model.Test.Timer != null)
+{
+    @await Html.PartialAsync("_TimerPartial", Model.Test.Timer)
+}
+<br />
+
+<form method="post" asp-action="CreateResult">
+    <table class="table table-bordered text-center table-warning">
+        <thead class="thead-dark">
+            <tr>
+                <th class="align-middle" style="width:3%">#</th>
+                <th class="align-middle">Вопрос</th>
+                <th class="align-middle" style="width:50%">Ответ</th>
+            </tr>
+        </thead>
+        <tbody class="form-group">
+            @foreach (var question in Model.Test.Question)
+            {
+                <tr>
+                    <th>@(++i)</th>
+                    <td class="text-left">
+                        <label>@question.Name</label>
+                    </td>
+                    <td class="text-left">
+                        @if (question.IsOpenType)
+                        {
+                            <div class="form-group">
+                                <input class="form-control" name="resultModel.UserAnswer[@(i-1)]">
+                            </div>
+                        }
+                        else
+                        {
+                            @foreach (var answer in question.Answer)
+                            {
+                                <div class="form-group text-left mb-4">
+                                    <input type="radio" value="@answer.Name" name="resultModel.UserAnswer[@(i-1)]">
+                                    <span>@answer.Name</span>
+                                </div>
+                            }
+                            <input type="hidden" value="Отсутствует" name="resultModel.UserAnswer[@(i-1)]" checked="checked" />
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="text-center">
+        <button class="btn btn-success" style="width:25%" type="submit">Показать результат</button>
+        <input type="hidden" value="@Model.Test.Rate" name="resultModel.Test.Rate" />
+        <input type="hidden" value="@Model.UserName" name="resultModel.Result.UserName" />
+        <input type="hidden" value="@Model.Test.Name" name="resultModel.Test.Name" />
+        <input type="hidden" value="@Model.Test.Category.Name" name="resultModel.Test.Category.Name" />
+        <input type="hidden" value="@Model.Test.Id" name="resultModel.Result.TestId" />
+    </div>
+</form>

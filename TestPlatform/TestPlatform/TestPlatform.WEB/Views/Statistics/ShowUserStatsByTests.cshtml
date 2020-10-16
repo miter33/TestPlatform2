@@ -1,0 +1,37 @@
+﻿@model IEnumerable<Result>
+@{
+    ViewData["Title"] = "Статистика";
+    int i = 0;
+}
+
+<h6 class="list-group-item list-group-item-action bg-warning text-dark">Пользователь: @Model.Select(p => p.UserName).FirstOrDefault()</h6>
+<h6 class="list-group-item list-group-item-action list-group-item-secondary">Категория: @Model.Select(p => p.Test.Category.Name).FirstOrDefault()</h6>
+<br />
+<table class="table table-bordered table-secondary">
+    <thead class="thead-dark text-center">
+        <tr>
+            <th class="align-middle" style="width:3%">#</th>
+            <th class="align-middle">Название теста</th>
+            <th class="align-middle" style="width:12%">Количество пройденных тестов</th>
+            <th class="align-middle" style="width:17%">Количество положительных результатов</th>
+            <th class="align-middle" style="width:17%">Количество отрицательных результатов</th>
+            <th class="align-middle" style="width:13%">Требуемый процент успешности теста, %</th>
+            <th class="align-middle" style="width:12%">Средний результат по тесту, %</th>
+        </tr>
+    </thead>
+    <tbody class="text-center">
+        @foreach (var result in Model.GroupBy(p => p.Test.Name))
+        {
+            <tr>
+                <th class="align-middle">@(++i)</th>
+                <td class="align-middle">@result.Key</td>
+                <td class="align-middle">@result.Count()</td>
+                <td class="align-middle">@result.Where(p => p.IsSuccess).Count()</td>
+                <td class="align-middle">@result.Where(p => !p.IsSuccess).Count()</td>
+                <td class="align-middle">@result.FirstOrDefault(p => p.Test.Name == result.Key).Test.Rate</td>
+                <td class="align-middle">@Math.Round((result.Sum(p => p.Point) / result.Count()), 1)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<a asp-action="ShowUserStatsByCategories" asp-route-userName="@Model.Select(p => p.UserName).FirstOrDefault()" class="btn btn-secondary" style="width:25%">Назад</a>
