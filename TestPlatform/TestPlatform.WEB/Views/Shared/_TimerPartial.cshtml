@@ -13,9 +13,9 @@
         let seconds = Math.floor((t / 1000) % 60);
         let minutes = Math.floor((t / 1000 / 60) % 60);
         return {
-            'total': t,
-            'minutes': minutes,
-            'seconds': seconds
+            "total": t,
+            "minutes": minutes,
+            "seconds": seconds
         };
     }
     function initializeClock(id, endtime) {
@@ -28,7 +28,7 @@
 
             if (t.total <= 0) {
                 clearInterval(timeinterval);
-                document.getElementsByTagName('form')[0].submit();
+                document.getElementsByTagName("form")[0].submit();
             }
 
             minutesSpan.innerHTML = ("0" + t.minutes).slice(-2);
@@ -39,5 +39,5 @@
         let timeinterval = setInterval(updateClock, 1000);
     }
     let deadline = new Date(Date.parse(new Date()) + @Model * 60 * 1000);
-    initializeClock('countdown', deadline);
+    initializeClock("countdown", deadline);
 </script>
