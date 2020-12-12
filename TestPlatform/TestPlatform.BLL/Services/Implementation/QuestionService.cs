@@ -26,7 +26,7 @@ namespace TestPlatform.BLL.Services.Implementation
 
         public Question DeleteQuestion(int id)
         {
-            var question = Questions.FirstOrDefault(p => p.Id == id);
+            Question question = Questions.FirstOrDefault(p => p.Id == id);
 
             if(question != null)
             {

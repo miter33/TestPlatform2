@@ -5,30 +5,31 @@ using TestPlatform.Common.ViewModels;
 using TestPlatform.Common.Entities;
 using TestPlatform.BLL.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace TestPlatform.WEB.Controllers
 {
     public class CreatingController : Controller
     {
-        private readonly ICategoryService catService;
+        private readonly ICategoryService categoryService;
         private readonly ITestService testService;
         private readonly Handler handler;
 
-        public CreatingController(ICategoryService catService, ITestService testService)
+        public CreatingController(ICategoryService categoryService, ITestService testService)
         {
-            this.catService = catService;
+            this.categoryService = categoryService;
             this.testService = testService;
             handler = new Handler();
         }
 
         public ViewResult GetListCategories()
         {
-            return View(catService.Categories.Include(p => p.Test));
+            return View(categoryService.Categories.Include(p => p.Test));
         }
 
         public IActionResult GetListTests(int id)
         {
-            var category = catService.Categories.Include(p => p.Test).ThenInclude(p => p.Question).FirstOrDefault(p => p.Id == id);
+            Category category = categoryService.Categories.Include(p => p.Test).ThenInclude(p => p.Question).FirstOrDefault(p => p.Id == id);
 
             if (category != null)
             {
@@ -50,7 +51,7 @@ namespace TestPlatform.WEB.Controllers
         {
             if (ModelState.IsValid)
             {
-                catService.AddCategory(category);
+                categoryService.AddCategory(category);
                 TempData["message"] = "Отлично!!! Категория успешно создана";
                 return RedirectToAction(nameof(GetListTests), new { id = category.Id });
             }
@@ -105,11 +106,11 @@ namespace TestPlatform.WEB.Controllers
         [HttpPost]
         public IActionResult CreateTest(TestParamViewModel testModel)
         {
-            var questionList = testModel.Test.Question;
+            List<Question> questions = testModel.Test.Question;
 
-            for (int i = 0; i < questionList.Count; i++)
+            for (int i = 0; i < questions.Count; i++)
             {
-                if (questionList[i].Answer.Where(p => p.IsCorrect).Count() != 1)
+                if (questions[i].Answer.Where(p => p.IsCorrect).Count() != 1)
                 {
                     ModelState.AddModelError("", $"Правильным должен быть 1 вариант ответа (Вопрос №{i + 1})");
                 }

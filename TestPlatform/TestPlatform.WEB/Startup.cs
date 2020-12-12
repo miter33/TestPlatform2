@@ -19,7 +19,7 @@ namespace TestPlatform.WEB
         {
             services.AddMvc().AddMvcOptions(opts => 
             opts.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor(value => "Поле не может быть пустым"));
-            var conString = Configuration["ConnectionStrings:DefaultConnection"];
+            string conString = Configuration["ConnectionStrings:DefaultConnection"];
             services.AddDbContext<TestDbContext>(options => options.UseSqlServer(conString, p => p.MigrationsAssembly("TestPlatform.DAL")));
             services.AddDependencies();
         }

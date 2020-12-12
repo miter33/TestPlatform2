@@ -21,22 +21,22 @@ namespace TestPlatform.BLL.BusinessModels
             testModel.Test.Category = null;
         }
 
-        public void CreatePoint(List<Question> question, ResultParamViewModel resultModel)
+        public void CreatePoint(List<Question> questions, ResultParamViewModel resultModel)
         {
             double point = 0;
-            var listRes = resultModel.UserAnswer;
+            List<string> userAnswers = resultModel.UserAnswer;
 
-            for (int i = 0; i < question.Count; i++)
+            for (int i = 0; i < questions.Count; i++)
             {
-                if (listRes[i] == null) continue;
+                if (userAnswers[i] == null) continue;
 
-                if(listRes[i].ToLower() == question[i].Answer.FirstOrDefault(p => p.IsCorrect).Name.ToLower())
+                if(userAnswers[i].ToLower() == questions[i].Answer.FirstOrDefault(p => p.IsCorrect).Name.ToLower())
                 {
                     point++;
                 }
             }
 
-            point = Math.Round((point * 100) / question.Count, 1);
+            point = Math.Round((point * 100) / questions.Count, 1);
             resultModel.Result.Point = point;
 
             if(resultModel.Result.Point >= resultModel.Test.Rate)

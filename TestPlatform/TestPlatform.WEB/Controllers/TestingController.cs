@@ -5,34 +5,35 @@ using TestPlatform.BLL.BusinessModels;
 using TestPlatform.Common.ViewModels;
 using TestPlatform.Common.Entities;
 using TestPlatform.BLL.Services.Interfaces;
+using System.Collections.Generic;
 
 namespace TestPlatform.WEB.Controllers
 {
     public class TestingController : Controller
     {
-        private readonly ICategoryService catService;
+        private readonly ICategoryService categoryService;
         private readonly ITestService testService;
-        private readonly IQuestionService questService;
-        private readonly IResultService resService;
+        private readonly IQuestionService questionService;
+        private readonly IResultService resultService;
         private readonly Handler handler;
 
-        public TestingController(ICategoryService catService, ITestService testService, IQuestionService questService, IResultService resService)
+        public TestingController(ICategoryService categoryService, ITestService testService, IQuestionService questionService, IResultService resultService)
         {
-            this.catService = catService;
+            this.categoryService = categoryService;
             this.testService = testService;
-            this.questService = questService;
-            this.resService = resService;
+            this.questionService = questionService;
+            this.resultService = resultService;
             handler = new Handler();
         }
 
         public ViewResult ChooseCategory()
         {
-            return View(catService.Categories.Include(p => p.Test));
+            return View(categoryService.Categories.Include(p => p.Test));
         }
 
         public IActionResult ChooseTest(int id)
         {
-            var category = catService.Categories.Include(p => p.Test).ThenInclude(p => p.Question).FirstOrDefault(p => p.Id == id);
+            Category category = categoryService.Categories.Include(p => p.Test).ThenInclude(p => p.Question).FirstOrDefault(p => p.Id == id);
             
             if (category != null)
             {
@@ -62,8 +63,9 @@ namespace TestPlatform.WEB.Controllers
 
             if (ModelState.IsValid)
             {
-                var listTest = testService.Tests.Include(p => p.Question).ThenInclude(p => p.Answer).FirstOrDefault(p => p.Id == result.TestId);
-                result.Test = listTest;
+                
+                Test tests = testService.Tests.Include(p => p.Question).ThenInclude(p => p.Answer).FirstOrDefault(p => p.Id == result.TestId);
+                result.Test = tests;
                 return View(result);
             }
             else
@@ -75,13 +77,13 @@ namespace TestPlatform.WEB.Controllers
         [HttpPost]
         public IActionResult CreateResult(ResultParamViewModel resultModel)
         {
-            var listQuestion = questService.Questions.Where(p => p.TestId == resultModel.Result.TestId).Include(p => p.Answer).ToList();
+            List<Question> questions = questionService.Questions.Where(p => p.TestId == resultModel.Result.TestId).Include(p => p.Answer).ToList();
 
-            if (listQuestion.Any())
+            if (questions.Any())
             {
-                handler.CreatePoint(listQuestion, resultModel);
-                resService.AddResult(resultModel.Result);
-                resultModel.Test.Question = listQuestion;
+                handler.CreatePoint(questions, resultModel);
+                resultService.AddResult(resultModel.Result);
+                resultModel.Test.Question = questions;
                 return View("ShowResult", resultModel);
             }
             else

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TestPlatform.BLL.Services.Interfaces;
+using TestPlatform.Common.Entities;
 
 namespace TestPlatform.WEB.Controllers
 {
@@ -23,7 +24,7 @@ namespace TestPlatform.WEB.Controllers
 
         public IActionResult ShowStatsByTests(int id)
         {
-            var category = categoryService.Categories.Include(p => p.Test).ThenInclude(p => p.Result).FirstOrDefault(p => p.Id == id);
+            Category category = categoryService.Categories.Include(p => p.Test).ThenInclude(p => p.Result).FirstOrDefault(p => p.Id == id);
             
             if (category != null)
             {
@@ -42,11 +43,11 @@ namespace TestPlatform.WEB.Controllers
 
         public IActionResult ShowUserStatsByCategories(string userName)
         {
-            var listResult = resultService.Results.Include(p => p.Test).ThenInclude(p => p.Category).Where(p => p.UserName == userName);
+            IQueryable<Result> results = resultService.Results.Include(p => p.Test).ThenInclude(p => p.Category).Where(p => p.UserName == userName);
             
-            if(listResult.Any())
+            if(results.Any())
             {
-                return View(listResult);
+                return View(results);
             }
             else
             {
@@ -56,11 +57,11 @@ namespace TestPlatform.WEB.Controllers
 
         public IActionResult ShowUserStatsByTests(string userName, int id)
         {
-            var listResult = resultService.Results.Include(p => p.Test).ThenInclude(p => p.Category).Where(p => p.UserName == userName && p.Test.CategoryId == id);
+            IQueryable<Result> results = resultService.Results.Include(p => p.Test).ThenInclude(p => p.Category).Where(p => p.UserName == userName && p.Test.CategoryId == id);
             
-            if (listResult.Any())
+            if (results.Any())
             {
-                return View(listResult);
+                return View(results);
             }
             else
             {

@@ -34,7 +34,7 @@ namespace TestPlatform.BLL.Services.Implementation
 
         public Test DeleteTest(int id)
         {
-            var test = Tests.FirstOrDefault(p => p.Id == id);
+            Test test = Tests.FirstOrDefault(p => p.Id == id);
 
             if(test != null)
             {

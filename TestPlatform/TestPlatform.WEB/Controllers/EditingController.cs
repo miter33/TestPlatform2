@@ -5,34 +5,35 @@ using TestPlatform.BLL.BusinessModels;
 using TestPlatform.Common.ViewModels;
 using TestPlatform.Common.Entities;
 using TestPlatform.BLL.Services.Interfaces;
+using System.Collections.Generic;
 
 namespace TestPlatform.WEB.Controllers
 {
     public class EditingController : Controller
     {
-        private readonly ICategoryService catService;
+        private readonly ICategoryService categoryService;
         private readonly ITestService testService;
-        private readonly IQuestionService questService;
+        private readonly IQuestionService questionService;
         private readonly IAnswerService answerService;
         private readonly Handler handler;
 
-        public EditingController(ITestService testService, IQuestionService questService, ICategoryService catService, IAnswerService answerService)
+        public EditingController(ITestService testService, IQuestionService questionService, ICategoryService categoryService, IAnswerService answerService)
         {
             this.testService = testService;
-            this.questService = questService;
-            this.catService = catService;
+            this.questionService = questionService;
+            this.categoryService = categoryService;
             this.answerService = answerService;
             handler = new Handler();
         }
 
         public ViewResult ChooseActionCategories()
         {
-            return View(catService.Categories.Include(p => p.Test));
+            return View(categoryService.Categories.Include(p => p.Test));
         }
 
         public IActionResult EditCategory(int id)
         {
-            var category = catService.Categories.FirstOrDefault(p => p.Id == id);
+            Category category = categoryService.Categories.FirstOrDefault(p => p.Id == id);
 
             if (category != null)
             {
@@ -49,7 +50,7 @@ namespace TestPlatform.WEB.Controllers
         {
             if (ModelState.IsValid)
             {
-                catService.UpdateCategory(category);
+                categoryService.UpdateCategory(category);
                 TempData["message"] = "Отлично!!! Название категории успешно сохранено";
                 return RedirectToAction(nameof(ChooseActionCategories));
             }
@@ -62,7 +63,7 @@ namespace TestPlatform.WEB.Controllers
         [HttpPost]
         public IActionResult DeleteCategory(int categoryId)
         {
-            var deletedCategory = catService.DeleteCategory(categoryId);
+            Category deletedCategory = categoryService.DeleteCategory(categoryId);
 
             if (deletedCategory != null)
             {
@@ -74,7 +75,7 @@ namespace TestPlatform.WEB.Controllers
 
         public IActionResult ChooseActionTests(int id)
         {
-            var category = catService.Categories.Include(p => p.Test).ThenInclude(p => p.Question).FirstOrDefault(p => p.Id == id);
+            Category category = categoryService.Categories.Include(p => p.Test).ThenInclude(p => p.Question).FirstOrDefault(p => p.Id == id);
 
             if (category != null)
             {
@@ -105,7 +106,7 @@ namespace TestPlatform.WEB.Controllers
         [HttpPost]
         public IActionResult DeleteTest(int testId, int categoryId)
         {
-            var deletedTest = testService.DeleteTest(testId);
+            Test deletedTest = testService.DeleteTest(testId);
 
             if (deletedTest != null)
             {
@@ -117,7 +118,7 @@ namespace TestPlatform.WEB.Controllers
 
         public IActionResult EditTest(int id)
         {
-            var test = testService.Tests.FirstOrDefault(p => p.Id == id);
+            Test test = testService.Tests.FirstOrDefault(p => p.Id == id);
 
             if (test != null)
             {
@@ -131,7 +132,7 @@ namespace TestPlatform.WEB.Controllers
 
         public IActionResult ChooseActionQuestions(int id)
         {
-            var test = testService.Tests.Include(p => p.Question).ThenInclude(p => p.Answer).FirstOrDefault(p => p.Id == id);
+            Test test = testService.Tests.Include(p => p.Question).ThenInclude(p => p.Answer).FirstOrDefault(p => p.Id == id);
 
             if (test != null)
             {
@@ -145,7 +146,7 @@ namespace TestPlatform.WEB.Controllers
 
         public IActionResult EditQuestion(int id)
         {
-            var question = questService.Questions.Include(p => p.Test).ThenInclude(p => p.Category).FirstOrDefault(p => p.Id == id);
+            Question question = questionService.Questions.Include(p => p.Test).ThenInclude(p => p.Category).FirstOrDefault(p => p.Id == id);
 
             if (question != null)
             {
@@ -163,7 +164,7 @@ namespace TestPlatform.WEB.Controllers
             if (ModelState.IsValid)
             {
                 question.Test = null;
-                questService.UpdateQuestion(question);
+                questionService.UpdateQuestion(question);
                 TempData["message"] = "Отлично!!! Название вопроса успешно сохранено";
                 return RedirectToAction(nameof(ChooseActionQuestions), new { id = question.TestId });
             }
@@ -176,7 +177,7 @@ namespace TestPlatform.WEB.Controllers
         [HttpPost]
         public IActionResult DeleteQuestion(int questionId, int testId)
         {
-            var deletedQuestion = questService.DeleteQuestion(questionId);
+            Question deletedQuestion = questionService.DeleteQuestion(questionId);
 
             if(deletedQuestion != null)
             {
@@ -211,9 +212,9 @@ namespace TestPlatform.WEB.Controllers
         [HttpPost]
         public IActionResult CreateQuestion(TestParamViewModel testModel)
         {
-            var questionList = testModel.Test.Question;
+            List<Question> questions = testModel.Test.Question;
 
-            if (questionList.FirstOrDefault().Answer.Where(p => p.IsCorrect).Count() != 1)
+            if (questions.FirstOrDefault().Answer.Where(p => p.IsCorrect).Count() != 1)
             {
                 ModelState.AddModelError("", $"Правильным должен быть 1 вариант ответа");
             }
@@ -221,7 +222,7 @@ namespace TestPlatform.WEB.Controllers
             if (ModelState.IsValid)
             {
                 handler.CheckValue(testModel);
-                questService.AddQuestion(testModel.Test.Question.FirstOrDefault());
+                questionService.AddQuestion(testModel.Test.Question.FirstOrDefault());
                 TempData["message"] = "Отлично!!! Вопрос успешно добавлен";
                 return RedirectToAction(nameof(ChooseActionQuestions), new { id = testModel.Test.Id });
             }
@@ -233,7 +234,7 @@ namespace TestPlatform.WEB.Controllers
 
         public IActionResult ChooseActionAnswers(int id)
         {
-            var question = questService.Questions.Include(p => p.Test).ThenInclude(p => p.Category).Include(p => p.Answer).FirstOrDefault(p => p.Id == id);
+            Question question = questionService.Questions.Include(p => p.Test).ThenInclude(p => p.Category).Include(p => p.Answer).FirstOrDefault(p => p.Id == id);
 
             if (question != null)
             {

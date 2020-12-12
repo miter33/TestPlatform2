@@ -34,7 +34,7 @@ namespace TestPlatform.BLL.Services.Implementation
 
         public Category DeleteCategory(int id)
         {
-            var category = Categories.FirstOrDefault(p => p.Id == id);
+            Category category = Categories.FirstOrDefault(p => p.Id == id);
 
             if(category != null)
             {
